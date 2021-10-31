@@ -74,7 +74,7 @@ void PathPlan::odomCallback(const nav_msgs::OdometryConstPtr& odomMsg)
   
   // check the wall distribution and update the path map every time the robot localize itself
   checkWall();
-  //wall_map.print();
+  wall_map.print();
   
   path_plan_alg();
   if(!goal_reached_){
@@ -313,7 +313,7 @@ void PathPlan::path_plan_alg()
 	
     }
     //test print the path_map
-    //path_map_.print();
+    path_map_.print();
     
   }
   

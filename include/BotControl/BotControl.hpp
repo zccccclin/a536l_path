@@ -24,7 +24,7 @@ private:
   void controlPub();
   
   double PI = 3.1415926;
-  double dt = 2;
+  double dt = 0.2;
   
   double max_vel = 0.7;
   double max_ang = PI;
