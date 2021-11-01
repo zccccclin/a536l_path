@@ -1,8 +1,6 @@
-from _typeshed import Self
-from os import close
 import rospy
 from nav_msgs.msg import Odometry
-from std_msgs.msg import Float32MutiArray
+from std_msgs.msg import Float32MultiArray
 from std_msgs.msg import Int16MultiArray
 from nav_msgs.msg import Odometry
 from geometry_msgs.msg import Point
@@ -19,7 +17,7 @@ class PathPlan:
         self.target_y = 0
         self.target_heading = 0
         self.goal_reached = GOAL_NOT_REACH
-        self.x_wall = np.zeros([GRID_SIZE+1, GRID_SIZ])
+        self.x_wall = np.zeros([GRID_SIZE+1, GRID_SIZE])
         self.y_wall = np.zeros([GRID_SIZE, GRID_SIZE+1])
         self.dist_to_center = 0.5
         self.tgt_idx = -1
@@ -31,7 +29,7 @@ class PathPlan:
         self.rB_phase = 0
         self.motion = [[1,0,1],[0,1,1],[-1,0,1],[0,-1,1]]
 
-        self.range_sub_ = rospy.Subscriber("/range_pub", Float32MutiArray, self.rangeCallback, queue_size=1)
+        self.range_sub_ = rospy.Subscriber("/range_pub", Float32MultiArray, self.rangeCallback, queue_size=1)
         self.odom_sub_ = rospy.Subscriber("/odom", Odometry, self.odomCallback, queue_size=1)
         self.x_wall_sub_ = rospy.Subscriber("/x_wall_pub", Int16MultiArray, self.xwallcallback, queue_size=1)
         self.y_wall_sub_ = rospy.Subscriber("/y_wall_pub", Int16MultiArray, self.ywallcallback, queue_size=1)
@@ -158,7 +156,7 @@ class PathPlan:
         self.open_set = {}
         self.close_set = {}
         position_x = self.pos_x_ - self.dist_to_center
-        position_y = self.pos_y_ - self..dist_to_center
+        position_y = self.pos_y_ - self.dist_to_center
 
         nstart = [self.calcXYIndex(position_x, MIN_X), 
                   self.calcXYIndex(position_y, MIN_Y),
@@ -191,7 +189,7 @@ class PathPlan:
                         current[1]+ self.motion[i][1],
                         current[2]+ self.motion[i][2],
                         c_id]
-                n_id = int(self.calGridIndex(node))
+                n_id = int(self.calcGridIndex(node))
 
                 if not self.checkCollision(current, node):
                     pass
@@ -219,7 +217,7 @@ class PathPlan:
         min_cost = 9999.0
         min_idx = 9999
         for i in set1:
-            cost = set1[i][2] + self.calHeuristic(self.ngoal, set1[i])
+            cost = set1[i][2] + self.calcHeuristic(self.ngoal, set1[i])
             if cost < min_cost:
                 min_cost = cost
                 min_idx = i
@@ -242,13 +240,13 @@ class PathPlan:
 
         collision = False
         if dx>0 and dy == 0:
-            collision = self.x_wall(next[0], curr[1])
+            collision = self.x_wall[next[0]][curr[1]]
         if dx<0 and dy == 0:
-            collision = self.x_wall(curr[0], curr[1])
+            collision = self.x_wall[curr[0]][curr[1]]
         if dx == 0 and dy>0:
-            collision = self.y_wall(curr[0], next[1])
+            collision = self.y_wall[curr[0]][next[1]]
         if dx == 0 and dy<0:
-            collision = self.y_wall(curr[0], curr[1])
+            collision = self.y_wall[curr[0]][curr[1]]
 
         if collision:
             return 0

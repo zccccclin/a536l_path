@@ -1,7 +1,7 @@
 #! /usr/bin/python
 import rospy
 from sensor_msgs.msg import LaserScan
-from std_msgs.msg import Float32MutiArray
+from std_msgs.msg import Float32MultiArray
 from std_msgs.msg import Int16MultiArray
 from geometry_msgs.msg import Twist
 from geometry_msgs.msg import Point
@@ -23,7 +23,7 @@ class RangeDetect:
 
         self.scan_sub = rospy.Subscriber('/scan', LaserScan, self.scanCallback, queue_size=1)
         self.scan_sub = rospy.Subscriber('/odom', Odometry, self.odomCallback, queue_size=1)
-        self.range_pub = rospy.Publisher('/range_pub', Float32MutiArray, queue_size=1)
+        self.range_pub = rospy.Publisher('/range_pub', Float32MultiArray, queue_size=1)
         self.x_wall_pub = rospy.Publisher('/x_wall_pub', Int16MultiArray, queue_size=1)
         self.y_wall_pub = rospy.Publisher('/y_wall_pub', Int16MultiArray, queue_size=1)
 
@@ -36,7 +36,7 @@ class RangeDetect:
 
         for i in range (0,scan_size):
             if m.isinf(scan_data[i]):
-                pass
+                continue
             angle = scan_increment*i
 
             if angle > PI:
@@ -50,16 +50,15 @@ class RangeDetect:
             y_inertia += self.pos_y_
 
             if x_inertia < 0 or y_inertia < 0:
-                pass
+                continue
 
             if m.fmod(x_inertia, 0.5) > 0.35 or m.fmod(x_inertia, 0.5) < 0.15:
                 x_idx = int((round(x_inertia/0.5)*5)/5)
                 y_idx = int((round(y_inertia/0.5)*5)/5)
-
                 if x_idx%2 == 0 and y_idx%2:
-                    self.x_wall[x_idx/2, y_idx/2] = 1
+                    self.x_wall[int(x_idx/2), int(y_idx/2)] = 1
                 if x_idx%2 and y_idx%2 == 0:
-                    self.y_wall[(x_idx-1)/2, y_idx/2] = 1
+                    self.y_wall[int((x_idx-1)/2), int(y_idx/2)] = 1
 
 
         smallest_dist = 100
@@ -69,8 +68,7 @@ class RangeDetect:
                     self.scan_ang_ = msg.angle_min + msg.angle_increment*i
                     if self.scan_ang_ > PI:
                         self.scan_ang_ -= 2*PI
-            
-            self.scan_range = smallest_dist
+        self.scan_range = smallest_dist
 
         self.pub()
         
@@ -122,17 +120,18 @@ class RangeDetect:
         x_pub.data.clear()
         y_pub.data.clear()
 
-        for i in range(0,GRID_SIZE):
-            for j in range(0, GRID_SIZE+1):
-                x_pub.data.append(self.x_wall[i,j])
-        for i in range(0, GRID_SIZE+1):
+        for i in range(0,GRID_SIZE+1):
             for j in range(0, GRID_SIZE):
+
+                x_pub.data.append(self.x_wall[i,j])
+        for i in range(0, GRID_SIZE):
+            for j in range(0, GRID_SIZE+1):
                 y_pub.data.append(self.y_wall[i,j])
         
         self.x_wall_pub.publish(x_pub)
         self.y_wall_pub.publish(y_pub)
 
-        msg_pub = Float32MutiArray()
+        msg_pub = Float32MultiArray()
         msg_pub.data.append(self.scan_range_)
         msg_pub.data.append(self.scan_ang_)
         self.range_pub.publish(msg_pub)

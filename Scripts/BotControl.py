@@ -1,7 +1,7 @@
 #! /usr/bin/python
 import rospy
 from geometry_msgs.msg import Twist 
-from geometry_msg.msg import Point
+from geometry_msgs.msg import Point
 from PreDefine import *
 
 class BotControl:
