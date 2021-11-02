@@ -17,8 +17,8 @@ class PathPlan:
         self.target_y = 0
         self.target_heading = 0
         self.goal_reached = GOAL_NOT_REACH
-        self.x_wall = np.zeros([GRID_SIZE+1, GRID_SIZE])
-        self.y_wall = np.zeros([GRID_SIZE, GRID_SIZE+1])
+        self.x_wall = np.zeros([GRID_SIZE+1, GRID_SIZE],dtype=int)
+        self.y_wall = np.zeros([GRID_SIZE, GRID_SIZE+1],dtype=int)
         self.dist_to_center = 0.5
         self.tgt_idx = -1
         self.tgt_dist = 9999
@@ -170,8 +170,9 @@ class PathPlan:
         self.open_set[self.calcGridIndex(nstart)] = nstart
         while True:
             if len(self.open_set) == 0:
-                goal_id = self.calcMinCostIndex(self.close_set)
+                goal_id = int(self.calcMinCostIndex(self.close_set))
                 break
+
             c_id = self.calcMinCostIndex(self.open_set)
             current = self.open_set[c_id]
             
@@ -185,16 +186,16 @@ class PathPlan:
             self.close_set[c_id] = current
 
             for i in range(0,4):
-                node = [current[0]+ self.motion[i][0],
-                        current[1]+ self.motion[i][1],
+                node = [current[0]+ int(self.motion[i][0]),
+                        current[1]+ int(self.motion[i][1]),
                         current[2]+ self.motion[i][2],
                         c_id]
                 n_id = int(self.calcGridIndex(node))
 
                 if not self.checkCollision(current, node):
-                    pass
+                    continue
                 if n_id in self.close_set.keys():
-                    pass
+                    continue
                 if n_id not in self.open_set.keys():
                     self.open_set[n_id] = node
                 else:
@@ -221,7 +222,7 @@ class PathPlan:
             if cost < min_cost:
                 min_cost = cost
                 min_idx = i
-        return min_idx
+        return int(min_idx)
     
     def calcHeuristic(self, n1, n2):
         weight = 1.0
@@ -257,11 +258,12 @@ class PathPlan:
         self.rx.append(self.calcGridPosition(self.ngoal[0], MIN_X) + self.dist_to_center)
         self.ry.append(self.calcGridPosition(self.ngoal[1], MIN_Y) + self.dist_to_center)
 
-        pind = self.ngoal[3]
+        pind = int(self.ngoal[3])
         while pind != -1:
             n = self.close_set[pind]
             self.rx.append(self.calcGridPosition(n[0], MIN_X) + self.dist_to_center)
             self.ry.append(self.calcGridPosition(n[1], MIN_Y) + self.dist_to_center)
+            pind = n[3]
 
     def calcTargetIndex(self):
         min_dist = 9999.0
@@ -271,7 +273,7 @@ class PathPlan:
                 m.pow((self.pos_y_ + self.la_dist*m.sin(self.ang_z_) - self.spath.ry[i]),2))
             if d < min_dist:
                 min_dist = d
-                self.tgt_idx = i
+                self.tgt_idx = int(i)
     
     def normalizeAngle(self,angle):
         if angle > PI:
