@@ -79,27 +79,27 @@ class RangeDetect:
         for i in range(9,0,-1):
             if i != 9:
                 rospy.loginfo("%s %s %s %s %s %s %s %s %s %s",
-                self.drawwall(self.y_wall[i,9],1),
-                self.drawwall(self.y_wall[i,8],1),
-                self.drawwall(self.y_wall[i,7],1),
-                self.drawwall(self.y_wall[i,6],1),
-                self.drawwall(self.y_wall[i,5],1),
-                self.drawwall(self.y_wall[i,4],1),
-                self.drawwall(self.y_wall[i,3],1),
-                self.drawwall(self.y_wall[i,2],1),
-                self.drawwall(self.y_wall[i,1],1),
-                self.drawwall(self.y_wall[i,0],1)
+                self.drawwall(self.y_wall[i][9],1),
+                self.drawwall(self.y_wall[i][8],1),
+                self.drawwall(self.y_wall[i][7],1),
+                self.drawwall(self.y_wall[i][6],1),
+                self.drawwall(self.y_wall[i][5],1),
+                self.drawwall(self.y_wall[i][4],1),
+                self.drawwall(self.y_wall[i][3],1),
+                self.drawwall(self.y_wall[i][2],1),
+                self.drawwall(self.y_wall[i][1],1),
+                self.drawwall(self.y_wall[i][0],1)
                 )
             rospy.loginfo("%s %s %s %s %s %s %s %s %s",
-                str(self.drawwall(self.x_wall[i,8],0)),
-                str(self.drawwall(self.x_wall[i,7],0)),
-                str(self.drawwall(self.x_wall[i,6],0)),
-                str(self.drawwall(self.x_wall[i,5],0)),
-                str(self.drawwall(self.x_wall[i,4],0)),
-                str(self.drawwall(self.x_wall[i,3],0)),
-                str(self.drawwall(self.x_wall[i,2],0)),
-                str(self.drawwall(self.x_wall[i,1],0)),
-                str(self.drawwall(self.x_wall[i,0],0)),
+                self.drawwall(self.x_wall[i][8],0),
+                self.drawwall(self.x_wall[i][7],0),
+                self.drawwall(self.x_wall[i][6],0)),
+                self.drawwall(self.x_wall[i][5],0),
+                self.drawwall(self.x_wall[i][4],0),
+                self.drawwall(self.x_wall[i][3],0),
+                self.drawwall(self.x_wall[i][2],0),
+                self.drawwall(self.x_wall[i][1],0),
+                self.drawwall(self.x_wall[i][0],0),
             )
 
     
