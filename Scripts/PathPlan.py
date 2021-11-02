@@ -25,7 +25,7 @@ class PathPlan:
         self.tgt_idx = -1
         self.tgt_dist = 9999
         self.tgt_steer = 9999
-        self.goal_dist = 0.25
+        self.goal_dist = 0.20
         self.la_dist = 0.25
         self.collision_dist = 0.141
         self.rB_phase = 0
@@ -302,9 +302,24 @@ class PathPlan:
             if d < min_dist:
                 min_dist = d
                 nearest_idx = i
+        if self.rB_phase == 1:
+            if abs(self.min_ob_ang) < PI/2:
+                self.tgt_dist = -.05
+                self.tgt_steer = -.1* self.normalizeAngle(m.atan2(self.ry[nearest_idx] - self.pos_y_, self.rx[nearest_idx] - self.pos_x_) - self.ang_z_)
+            else:
+                self.tgt_dist = .05
+                self.tgt_steer = .1* self.normalizeAngle(m.atan2(self.ry[nearest_idx] - self.pos_y_, self.rx[nearest_idx] - self.pos_x_) - self.ang_z_)  
+            if abs(min_dist) < 0.3 or self.min_ob_dist > 0.3:
+                self.rB_phase = 2
+        if self.rB_phase == 2:
+            self.tgt_dist = 0.00
+            self.tgt_steer = self.normalizeAngle(self.spath[2] - self.ang_z_)
+            if abs(self.tgt_steer) < 0.3:
+                self.rB_phase = 0
+        else:
+            return 
 
-        pass
-        
+            
 
 
                 
