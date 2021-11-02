@@ -93,7 +93,7 @@ class RangeDetect:
             rospy.loginfo("%s %s %s %s %s %s %s %s %s",
                 self.drawwall(self.x_wall[i][8],0),
                 self.drawwall(self.x_wall[i][7],0),
-                self.drawwall(self.x_wall[i][6],0)),
+                self.drawwall(self.x_wall[i][6],0),
                 self.drawwall(self.x_wall[i][5],0),
                 self.drawwall(self.x_wall[i][4],0),
                 self.drawwall(self.x_wall[i][3],0),
