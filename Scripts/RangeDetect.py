@@ -30,10 +30,10 @@ class RangeDetect:
         rospy.loginfo('RangeDetect Node Initialized')    
 
     def scanCallback(self,msg):
-        scan_data = np.asarray(msg.ranges)
+        scan_data = msg.ranges
         scan_increment = msg.angle_increment
-        scan_size = scan_data.size
-
+        scan_size = len(scan_data)
+        print(scan_data)
         for i in range (0,scan_size):
             if m.isinf(scan_data[i]):
                 continue
@@ -53,7 +53,7 @@ class RangeDetect:
             if x_inertia < 0 or y_inertia < 0:
                 continue
 
-            if m.fmod(x_inertia, 0.5) > 0.35 or m.fmod(x_inertia, 0.5) < 0.15:
+            if (m.fmod(x_inertia, 0.5) > 0.35) or (m.fmod(x_inertia, 0.5) < 0.15):
                 x_idx = int((round(x_inertia/0.5)*5)/5)
                 y_idx = int((round(y_inertia/0.5)*5)/5)
                 if x_idx%2 == 0 and y_idx%2:
