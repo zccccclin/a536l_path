@@ -54,7 +54,7 @@ class PathPlan:
         
         self.AstarPlanner()
         rx_size = len(self.rx)
-        if rx_size and not self.goal_reached:
+        if rx_size > 1 and (not self.goal_reached):
             self.rx = self.rx[::-1]
             self.ry = self.ry[::-1]
             self.spath = SpiralPath.calcSpiralPath(self.rx, self.ry, 0.05)
