@@ -9,7 +9,7 @@ class BotControl:
         self.GOAL_NOT_REACH = GOAL_NOT_REACH
         self.GOAL_REACH = GOAL_REACH
         self.target_x_ = 0
-        self.target_y_ =0
+        self.target_y_ = 0
         self.goal_reached_ = 0
         self.error_pos_ = 0
         self.error_pos_prev_ = 0
@@ -33,6 +33,9 @@ class BotControl:
         trans_heading = 0
         self.error_pos_prev_ = self. error_pos_
         self.error_heading_prev_ = self.error_heading_
+
+        self.error_pos_ = self.target_x_
+        self.error_heading_ = self.target_y_
         
         if self.error_heading_ < PI:
             self.error_heading_ += 2*PI
@@ -40,7 +43,7 @@ class BotControl:
             self.error_heading_ -= 2*PI
         
         #PID controller algo
-        I_heading = self.dtdt*self.error_heading_
+        I_heading = self.dt*self.error_heading_
         I_pos = self.dt*self.error_pos_
         D_heading = self.error_heading_prev_ - self.error_heading_
         D_pos = self.error_pos_prev_ - self.error_pos_

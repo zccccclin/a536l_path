@@ -41,6 +41,7 @@ class RangeDetect:
 
             if angle > PI:
                 angle -= 2*PI
+
             x = scan_data[i]*m.cos(angle)
             y = scan_data[i]*m.sin(angle)
             x_inertia = x*m.cos(self.ang_z_) - y*m.sin(self.ang_z_)
@@ -56,9 +57,9 @@ class RangeDetect:
                 x_idx = int((round(x_inertia/0.5)*5)/5)
                 y_idx = int((round(y_inertia/0.5)*5)/5)
                 if x_idx%2 == 0 and y_idx%2:
-                    self.x_wall[int(x_idx/2), int(y_idx/2)] = 1
+                    self.x_wall[int(x_idx/2)][int((y_idx-1)/2)] = 1
                 if x_idx%2 and y_idx%2 == 0:
-                    self.y_wall[int((x_idx-1)/2), int(y_idx/2)] = 1
+                    self.y_wall[int((x_idx-1)/2)][int(y_idx/2)] = 1
 
 
         smallest_dist = 100
@@ -120,13 +121,12 @@ class RangeDetect:
         x_pub.data.clear()
         y_pub.data.clear()
 
-        for i in range(0,GRID_SIZE+1):
-            for j in range(0, GRID_SIZE):
-
-                x_pub.data.append(self.x_wall[i,j])
-        for i in range(0, GRID_SIZE):
+        for i in range(0,GRID_SIZE):
             for j in range(0, GRID_SIZE+1):
-                y_pub.data.append(self.y_wall[i,j])
+                x_pub.data.append(self.x_wall[j][i])
+        for i in range(0, GRID_SIZE+1):
+            for j in range(0, GRID_SIZE):
+                y_pub.data.append(self.y_wall[j][i])
         
         self.x_wall_pub.publish(x_pub)
         self.y_wall_pub.publish(y_pub)
