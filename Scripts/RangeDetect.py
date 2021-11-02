@@ -12,7 +12,7 @@ from PreDefine import *
 
 class RangeDetect:
     def __init__(self):
-        self.scan_range_ = 0
+        self.scan_range = 0
         self.scan_ang_ = 0
         self.ang_z_ = 0
         self.pos_x_ = 0
@@ -74,7 +74,7 @@ class RangeDetect:
         self.pub()
         
         rospy.loginfo("---------------------------------")
-        rospy.loginfo("Nearest obstace distance: %.2f", self.scan_range_)
+        rospy.loginfo("Nearest obstace distance: %.2f", self.scan_range)
         rospy.loginfo("Occupancy Grid")
         for i in range(9,0,-1):
             if i != 9:
@@ -132,7 +132,7 @@ class RangeDetect:
         self.y_wall_pub.publish(y_pub)
 
         msg_pub = Float32MultiArray()
-        msg_pub.data.append(self.scan_range_)
+        msg_pub.data.append(self.scan_range)
         msg_pub.data.append(self.scan_ang_)
         self.range_pub.publish(msg_pub)
 
