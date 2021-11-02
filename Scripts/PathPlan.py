@@ -6,7 +6,7 @@ from nav_msgs.msg import Odometry
 from geometry_msgs.msg import Point
 import math as m
 import numpy as np
-from SpiralPath import *
+import SpiralPath
 from PreDefine import *
 
 class PathPlan:
@@ -58,9 +58,9 @@ class PathPlan:
             self.spath = SpiralPath.calcSpiralPath(rx_inv, ry_inv, 0.05)
             self.calcTargetIndex()
 
-            self.target_x = self.spath.rx[self.tgt_idx]
-            self.target_y = self.spath.ry[self.tgt_idx]
-            self.target_heading = self.spath.ryaw[self.tgt_idx]
+            self.target_x = self.spath[0][self.tgt_idx]
+            self.target_y = self.spath[1]][self.tgt_idx]
+            self.target_heading = self.spath[2][self.tgt_idx]
 
             self.tgt_dist = m.sqrt(m.pow(self.target_x - self.pos_x_, 2) + m.pow(self.target_y - self.pos_y_, 2))
             self.tgt_steer = self.normalizeAngle(self.target_heading - self.ang_z_)
@@ -73,7 +73,7 @@ class PathPlan:
             if number > rx_size:
                 number = rx_size
             for i in range(0, number):
-                rospy.loginfo("X: %.2f, Y: %.2f", self.spath.rx[i], self.spath.ry[i])
+                rospy.loginfo("X: %.2f, Y: %.2f", self.spath[0]][i], self.spath[1][i])
             rospy.loginfo("------------------------------")
             rospy.loginfo("Target |X:%.2f,Y:%.2f,HDG:%.2f", self.target_x, self.target_y,self.target_heading)
             rospy.loginfo("Robot  |X:%.2f,Y:%.2f,HDG:%.2f", self.pos_x_, self.pos_y_, self.ang_z_)
@@ -267,10 +267,10 @@ class PathPlan:
 
     def calcTargetIndex(self):
         min_dist = 9999.0
-        for i in range(0, len(self.spath.rx)):
+        for i in range(0, len(self.spath[0])):
             d = m.sqrt(
-                m.pow((self.pos_x_ + self.la_dist*m.cos(self.ang_z_) - self.spath.rx[i]),2) + 
-                m.pow((self.pos_y_ + self.la_dist*m.sin(self.ang_z_) - self.spath.ry[i]),2))
+                m.pow((self.pos_x_ + self.la_dist*m.cos(self.ang_z_) - self.spath[0][i]),2) + 
+                m.pow((self.pos_y_ + self.la_dist*m.sin(self.ang_z_) - self.spath[1][i]),2))
             if d < min_dist:
                 min_dist = d
                 self.tgt_idx = int(i)
