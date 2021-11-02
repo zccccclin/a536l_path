@@ -17,8 +17,8 @@ class RangeDetect:
         self.ang_z_ = 0
         self.pos_x_ = 0
         self.pos_y_ = 0
-        self.x_wall = np.zeros([GRID_SIZE+1, GRID_SIZE])
-        self.y_wall = np.zeros([GRID_SIZE, GRID_SIZE+1])
+        self.x_wall = np.zeros([GRID_SIZE+1, GRID_SIZE],dtype=int)
+        self.y_wall = np.zeros([GRID_SIZE, GRID_SIZE+1],dtype=int)
         self.max_dist_ = 3.5
 
         self.scan_sub = rospy.Subscriber('/scan', LaserScan, self.scanCallback, queue_size=1)
@@ -57,9 +57,9 @@ class RangeDetect:
                 x_idx = int((round(x_inertia/0.5)*5)/5)
                 y_idx = int((round(y_inertia/0.5)*5)/5)
                 if x_idx%2 == 0 and y_idx%2:
-                    self.x_wall[int(x_idx/2)][int((y_idx-1)/2)] = 1
+                    self.x_wall[int(x_idx/2)][int((y_idx-1)/2)] = int(1)
                 if x_idx%2 and y_idx%2 == 0:
-                    self.y_wall[int((x_idx-1)/2)][int(y_idx/2)] = 1
+                    self.y_wall[int((x_idx-1)/2)][int(y_idx/2)] = int(1)
 
 
         smallest_dist = 100
