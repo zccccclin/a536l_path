@@ -1,3 +1,5 @@
+#! /usr/bin/env python3
+
 import rospy
 from nav_msgs.msg import Odometry
 from std_msgs.msg import Float32MultiArray
@@ -53,13 +55,13 @@ class PathPlan:
         self.AstarPlanner()
         rx_size = len(self.rx)
         if rx_size and not self.goal_reached:
-            rx_inv = self.rx[::-1]
-            ry_inv = self.ry[::-1]
-            self.spath = SpiralPath.calcSpiralPath(rx_inv, ry_inv, 0.05)
+            self.rx = self.rx[::-1]
+            self.ry = self.ry[::-1]
+            self.spath = SpiralPath.calcSpiralPath(self.rx, self.ry, 0.05)
             self.calcTargetIndex()
 
             self.target_x = self.spath[0][self.tgt_idx]
-            self.target_y = self.spath[1]][self.tgt_idx]
+            self.target_y = self.spath[1][self.tgt_idx]
             self.target_heading = self.spath[2][self.tgt_idx]
 
             self.tgt_dist = m.sqrt(m.pow(self.target_x - self.pos_x_, 2) + m.pow(self.target_y - self.pos_y_, 2))
@@ -67,13 +69,13 @@ class PathPlan:
 
             rospy.loginfo("--------A* Global Path--------")
             for i in range(0, rx_size):
-                rospy.loginfo("X: %.2f, Y: %.2f", rx_inv[i], ry_inv[i])
+                rospy.loginfo("X: %.2f, Y: %.2f", self.rx[i], self.ry[i])
             rospy.loginfo("--------Stanley Control---------")
             number = 3
             if number > rx_size:
                 number = rx_size
             for i in range(0, number):
-                rospy.loginfo("X: %.2f, Y: %.2f", self.spath[0]][i], self.spath[1][i])
+                rospy.loginfo("X: %.2f, Y: %.2f", self.spath[0][i], self.spath[1][i])
             rospy.loginfo("------------------------------")
             rospy.loginfo("Target |X:%.2f,Y:%.2f,HDG:%.2f", self.target_x, self.target_y,self.target_heading)
             rospy.loginfo("Robot  |X:%.2f,Y:%.2f,HDG:%.2f", self.pos_x_, self.pos_y_, self.ang_z_)
@@ -142,12 +144,12 @@ class PathPlan:
         data_size = len(msg.data)
         for i in range(0, data_size):
             j = int(i/(GRID_SIZE+1))
-            self.x_wall[ i%(GRID_SIZE+1), j] = msg.data[i]
+            self.x_wall[ i%(GRID_SIZE+1)][j] = msg.data[i]
     def ywallcallback(self,msg):
         data_size = len(msg.data)
         for i in range(0, data_size):
             j = int(i/(GRID_SIZE))
-            self.x_wall[ i%GRID_SIZE, j] = msg.data[i]
+            self.y_wall[i%GRID_SIZE][j] = msg.data[i]
     
 
     def AstarPlanner(self):

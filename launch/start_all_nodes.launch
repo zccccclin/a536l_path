@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <launch>
-    <node pkg="a536l_path" type="range_detect_node" name="range_detect_node"
+    <node pkg="a536l_path" type="RangeDetect.py" name="range_detect_node"
 output="screen" launch-prefix="gnome-terminal --command"/>
-    <node pkg="a536l_path" type="path_plan_node" name="path_plan_node"
+    <node pkg="a536l_path" type="PathPlan.py" name="path_plan_node"
 output="screen" launch-prefix="gnome-terminal --command"/>
-    <node pkg="a536l_path" type="bot_control_node" name="bot_control_node"
+    <node pkg="a536l_path" type="BotControl.py" name="bot_control_node"
 output="screen" launch-prefix="gnome-terminal --command"/>
     <rosparam command="load" file="$(find a536l_path)/config/config.yaml"/>
 </launch>

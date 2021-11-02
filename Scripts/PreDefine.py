@@ -1,3 +1,5 @@
+#! /usr/bin/env python3
+
 PI = 3.14159265
 THRESHOLD_SWITCH = 0.0025
 dt = 0.05

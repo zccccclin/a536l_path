@@ -1,7 +1,9 @@
+#! /usr/bin/env python3
+
 import math as m
 import numpy as np
 
-def calcSpiralPath(_x,_y,ds):
+def calcSpiralPath(_x,_y,_ds):
     rx = []
     ry = []
     ryaw = []
@@ -9,23 +11,22 @@ def calcSpiralPath(_x,_y,ds):
     s = []
     sp = [rx,ry,ryaw,rk,s]
 
-    sp2d = Spiral2D()
-    sp2d.init_calc(_x,_y)
+    sp2d = Spiral2D(_x,_y)
     _s = []
     i = 0
     while i < sp2d.s[-1]:
         _s.append(i)
-        i+= ds
+        i+= _ds
     
     for pos in _s:
         xy = sp2d.calcPosition(pos)
         ix = xy[0]
         iy = xy[1]
 
-        sp.rx.append(ix)
-        sp.ry.append(iy)
-        sp.ryaw.append(sp2d.calcYaw(pos))
-        sp.rk.append(sp2d.calcCurvature(pos))
+        sp[0].append(ix)
+        sp[1].append(iy)
+        sp[2].append(sp2d.calcYaw(pos))
+        sp[3].append(sp2d.calcCurvature(pos))
 
     sp[4] = _s
 
@@ -48,7 +49,7 @@ class Spiral:
         B = self.calcB(self.h)
         self.c = np.linalg.solve(A,B)
         
-        for i in range(0,self.nx):
+        for i in range(0,self.nx-1):
             self.d.append((self.c[i+1] - self.c[i])/(3* self.h[i]))
             tb = self.a[i+1] - (self.a[i]/self.h[i]) - self.h[i] * (self.c[i+1] + 2*self.c[i])/3
             self.b.append(tb)
@@ -113,17 +114,18 @@ class Spiral:
 
 class Spiral2D:
     def __init__(self,_x,_y):
+        self.nx = len(_x)
+        self.ds = []
         self.s = self.calcS(_x,_y)
         self.sx = Spiral(self.s,_x)
         self.sy = Spiral(self.s,_y)
-        self.nx = len(_x)
-        self.ds = []
+
     def calcS(self,_x,_y):
         for i in range(1, self.nx):
             dx = _x[i] - _x[i-1]
             dy = _y[i] - _y[i-1]
             self.ds.append(m.sqrt(m.pow(dx,2) + m.pow(dy,2)))
-        
+        print(self.ds)
         _s = self.ds[0]
         cumsum = []
         cumsum.append(0)

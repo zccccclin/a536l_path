@@ -1,4 +1,4 @@
-#! /usr/bin/python
+#! /usr/bin/env python3
 import rospy
 from sensor_msgs.msg import LaserScan
 from std_msgs.msg import Float32MultiArray
