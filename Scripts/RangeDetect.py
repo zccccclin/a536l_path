@@ -44,7 +44,7 @@ class RangeDetect:
             x = scan_data[i]*m.cos(angle)
             y = scan_data[i]*m.sin(angle)
             x_inertia = x*m.cos(self.ang_z_) - y*m.sin(self.ang_z_)
-            y_inertia = x*m.sin(self.ang_z_) - y*m.sin(self.ang_z_)
+            y_inertia = x*m.sin(self.ang_z_) + y*m.cos(self.ang_z_)
 
             x_inertia += self.pos_x_
             y_inertia += self.pos_y_
