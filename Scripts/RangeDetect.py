@@ -33,7 +33,6 @@ class RangeDetect:
         scan_data = msg.ranges
         scan_increment = msg.angle_increment
         scan_size = len(scan_data)
-        print(scan_data)
         for i in range (0,scan_size):
             if m.isinf(scan_data[i]):
                 continue
@@ -56,9 +55,9 @@ class RangeDetect:
             if (m.fmod(x_inertia, 0.5) > 0.35) or (m.fmod(x_inertia, 0.5) < 0.15):
                 x_idx = int((round(x_inertia/0.5)*5)/5)
                 y_idx = int((round(y_inertia/0.5)*5)/5)
-                if x_idx%2 == 0 and y_idx%2:
+                if (x_idx%2 == 0) and (y_idx%2):
                     self.x_wall[int(x_idx/2)][int((y_idx-1)/2)] = int(1)
-                if x_idx%2 and y_idx%2 == 0:
+                if x_idx%2 and (y_idx%2 == 0):
                     self.y_wall[int((x_idx-1)/2)][int(y_idx/2)] = int(1)
 
 
@@ -76,7 +75,7 @@ class RangeDetect:
         rospy.loginfo("---------------------------------")
         rospy.loginfo("Nearest obstace distance: %.2f", self.scan_range)
         rospy.loginfo("Occupancy Grid")
-        for i in range(9,0,-1):
+        for i in [9, 8 , 7 ,6 ,5 ,4,3,2,1,0]:
             if i != 9:
                 rospy.loginfo("%s %s %s %s %s %s %s %s %s %s",
                 self.drawwall(self.y_wall[i][9],1),
